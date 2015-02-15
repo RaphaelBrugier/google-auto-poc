@@ -15,13 +15,12 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.IOException;
 import java.util.Set;
 
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
+import static javax.lang.model.element.Modifier.*;
 
 
 @AutoService(Processor.class)
@@ -31,11 +30,14 @@ public class FactoryProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Filer filer = processingEnv.getFiler();
 
-        for (Element element : roundEnv.getElementsAnnotatedWith(Factory.class)) {
-            String className = element.getSimpleName().toString();
+
+        Elements elements = processingEnv.getElementUtils();
+
+        for (Element annotatedClass : roundEnv.getElementsAnnotatedWith(Factory.class)) {
+            String className = annotatedClass.getSimpleName().toString();
 
             try {
-                String packageName = "com.github.rbrugier";
+                String packageName = elements.getPackageOf(annotatedClass).getQualifiedName().toString();
 
                 ClassName targetClass = ClassName.get(packageName, className);
 
