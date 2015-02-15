@@ -29,13 +29,10 @@ public class FactoryProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-        print("entering processor");
         Filer filer = processingEnv.getFiler();
 
         for (Element element : roundEnv.getElementsAnnotatedWith(Factory.class)) {
             String className = element.getSimpleName().toString();
-            print(className);
 
             try {
                 String packageName = "com.github.rbrugier";
