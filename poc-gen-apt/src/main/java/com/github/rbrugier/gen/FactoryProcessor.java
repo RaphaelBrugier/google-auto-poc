@@ -24,7 +24,6 @@ import static javax.lang.model.element.Modifier.*;
 @AutoService(Processor.class)
 public class FactoryProcessor extends AbstractProcessor {
 
-
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
