@@ -3,7 +3,10 @@ package com.github.rbrugier.gen;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
-import com.squareup.javawriter.JavaWriter;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -13,12 +16,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.Set;
 
-import static javax.lang.model.element.Modifier.*;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 
 @AutoService(Processor.class)
@@ -36,16 +39,23 @@ public class FactoryProcessor extends AbstractProcessor {
 
             try {
                 String packageName = "com.github.rbrugier";
-                JavaFileObject sourceFile = filer.createSourceFile(packageName +"." + className + "Factory");
-                JavaWriter writer = new JavaWriter(sourceFile.openWriter());
-                writer.emitPackage(packageName);
-                writer.emitImports(packageName + "."  + className);
-                writer.beginType(className + "Factory", "class", EnumSet.of(PUBLIC, FINAL));
-                writer.beginMethod(className, "create", EnumSet.of(PUBLIC, FINAL, STATIC));
-                writer.emitStatement(" return new " + className + "()");
-                writer.endMethod();
-                writer.endType();
-                writer.close();
+
+                ClassName targetClass = ClassName.get(packageName, className);
+
+                MethodSpec create = MethodSpec.methodBuilder("create")
+                        .addStatement("return new $T()", targetClass)
+                        .returns(targetClass)
+                        .addModifiers(PUBLIC, STATIC, FINAL)
+                        .build();
+                TypeSpec typeSpec = TypeSpec.
+                        classBuilder(className + "Factory")
+                        .addModifiers(PUBLIC, FINAL)
+                        .addMethod(create)
+                        .build();
+
+                JavaFile javaFile = JavaFile.builder(packageName + ".gen", typeSpec)
+                        .build();
+                javaFile.writeTo(filer);
 
             } catch (IOException e) {
                 print(e.getMessage());
