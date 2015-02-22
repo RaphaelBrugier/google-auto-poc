@@ -3,11 +3,9 @@ package com.github.rbrugier.gen;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 
+import javax.annotation.Generated;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Processor;
@@ -46,8 +44,11 @@ public class FactoryProcessor extends AbstractProcessor {
                         .returns(targetClass)
                         .addModifiers(PUBLIC, STATIC, FINAL)
                         .build();
-                TypeSpec typeSpec = TypeSpec.
-                        classBuilder(className + "Factory")
+                AnnotationSpec generatedAnnotation = AnnotationSpec.builder(Generated.class)
+                        .addMember("value", "$S", this.getClass().getCanonicalName())
+                        .build();
+                TypeSpec typeSpec = TypeSpec.classBuilder(className + "Factory")
+                        .addAnnotation(generatedAnnotation)
                         .addModifiers(PUBLIC, FINAL)
                         .addMethod(create)
                         .build();
