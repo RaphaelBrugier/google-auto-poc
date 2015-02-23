@@ -25,7 +25,7 @@ import static javax.lang.model.element.Modifier.*;
  * This processor uses the <a href="https://github.com/square/javapoet">JavaPoet library</a> to generate the code.
  */
 @AutoService(Processor.class)
-public class FactoryProcessorJavaPoet extends AbstractProcessor {
+public class JavaPoetFactoryProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {

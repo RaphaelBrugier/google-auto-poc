@@ -34,12 +34,12 @@ import static javax.lang.model.element.Modifier.*;
  * This processor uses the Freemarker library to generate the source code
  */
 @AutoService(Processor.class)
-public class FactoryProcessorTemplate extends AbstractProcessor {
+public class FreeMarkerFactoryProcessor extends AbstractProcessor {
 
 
     Configuration cfg;
 
-    public FactoryProcessorTemplate() {
+    public FreeMarkerFactoryProcessor() {
         cfg = new Configuration(Configuration.VERSION_2_3_21);
 
     }
