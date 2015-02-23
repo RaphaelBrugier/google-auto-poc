@@ -65,7 +65,7 @@ public class FactoryProcessorJavaPoet extends AbstractProcessor {
             }
         }
 
-        return true;
+        return false;
     }
 
     private void print(String msg) {
