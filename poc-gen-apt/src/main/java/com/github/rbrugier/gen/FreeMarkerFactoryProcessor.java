@@ -76,7 +76,7 @@ public class FreeMarkerFactoryProcessor extends AbstractProcessor {
         catch (TemplateException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     private void print(String msg) {
